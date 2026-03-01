@@ -1,111 +1,125 @@
-# ==============================================================================
-# Hava Yolu Yolcu Say??s?? Zaman Serisi Analizi (AirPassengers)
+---
+title: "Statistical Analysis of Financial and Operational Time Series"
+output: html_notebook
+---
 
-# Metodoloji: Klasik Ayr????t??rma, ARIMA ve ??stel D??zeltme (ETS) Modelleri
-# ==============================================================================
+# 1. Proje Özeti
+Bu proje, eğilimleri, mevsimselliği anlamak ve istatistiksel modeller kullanarak tahminler yapmak için üç farklı zaman serisi veri setini analiz eder.
 
-# ------------------------------------------------------------------------------
-# 1. K??t??phanelerin Y??klenmesi
-# ------------------------------------------------------------------------------
+- **Veri 1:** AirPassengers (Operasyonel Veri)
+- **Veri 2:** Nottem (Çevresel Veri)
+- **Veri 3:** Google Hisse Senedi Fiyatları (Finansal Veri)
+
+---
+
+# 2. Bölüm 1: Operasyonel Veri Analizi (AirPassengers)
+1949-1960 yılları arasındaki uluslararası havayolu yolcu sayılarının aylık toplamlarının analizi.
+
+```{r, message=FALSE, warning=FALSE}
+# Gerekli kütüphaneleri yükleyelim
 library(ggplot2)
-library(forecast)
-library(tseries)
-library(fpp2)
-library(TTR)
-library(plotly)
 library(datasets)
+library(TTR)
+library(fpp2)
+library(forecast)
+library(plotly)
+library(tseries)
 
-# ------------------------------------------------------------------------------
-# 2. Veri Haz??rl?????? ve G??rselle??tirme
-# ------------------------------------------------------------------------------
+# Veriyi yükleyelim
 data("AirPassengers")
 ts_data <- AirPassengers
 
-# Klasik Zaman Serisi Grafi??i
-plot(ts_data, main="AirPassengers Zaman Serisi (1949-1960)", 
-     xlab="Y??l", ylab="Yolcu Say??s??", col="darkblue", lwd=2)
+# Görselleştirme
+plot(ts_data, main="AirPassengers Zaman Serisi", 
+     xlab="Yıl", ylab="Yolcu Sayısı", col="blue")
 
-# ggplot2 ile Modern G??rselle??tirme
-ts_df <- data.frame(
-  Month = as.Date(time(ts_data)),
-  Passengers = as.numeric(ts_data)
-)
+# Mevsimsel varyasyon trendle birlikte arttığı için çarpımsal (multiplicative) ayrıştırma kullanıyoruz.
 
-ggplot(ts_df, aes(x = Month, y = Passengers)) +
-  geom_line(color = "blue", size = 1) +
-  labs(title = "Hava Yolu Yolcu Say??s?? Trend Analizi", x = "Y??l", y = "Yolcu Say??s??") +
-  theme_minimal()
+airpassengers_decomp <- decompose(AirPassengers, type = "multiplicative")
+plot(airpassengers_decomp)
 
-# ------------------------------------------------------------------------------
-# 3. Zaman Serisi Ayr????t??rma (Decomposition)
-# ------------------------------------------------------------------------------
-# ??arp??msal Model (Varyans zamanla artt?????? i??in tercih edilmi??tir)
-air_decomp <- decompose(ts_data, type = "multiplicative")
-plot(air_decomp, col="purple")
 
-# Bile??enleri Tekil ??nceleme
-par(mfrow=c(2,2))
-plot(air_decomp$trend, main="Trend", col="blue")
-plot(air_decomp$seasonal, main="Mevsimsellik", col="red")
-plot(air_decomp$random, main="Rassall??k", col="green")
-plot(ts_data / air_decomp$seasonal, main="Mevsimsellikten Ar??nd??r??lm????", col="darkgreen")
-par(mfrow=c(1,1))
+# ARIMA ile Tahmin
 
-# ------------------------------------------------------------------------------
-# 4. Hareketli Ortalamalar ve Yumu??atma (Smoothing)
-# ------------------------------------------------------------------------------
-# 12 Ayl??k Basit Hareketli Ortalama (SMA)
-sma_12 <- SMA(ts_data, n = 12)
-plot(ts_data, main = "12 Ayl??k Hareketli Ortalama Trendi", col = "gray")
-lines(sma_12, col = "red", lwd = 2)
+# Otomatik ARIMA modeli
+model <- auto.arima(AirPassengers)
+summary(model)
 
-# ------------------------------------------------------------------------------
-# 5. Otokorelasyon ve Dura??anl??k Testleri
-# ------------------------------------------------------------------------------
-# ACF ve Gecikme Diyagramlar??
-ggAcf(ts_data, main = "Otokorelasyon Fonksiyonu (ACF)")
-gglagplot(ts_data, main = "Gecikme Diyagramlar??")
-
-# Box-Ljung Testi (Beyaz G??r??lt?? Kontrol??)
-Box.test(ts_data, lag = 10, type = "Ljung-Box")
-
-# ------------------------------------------------------------------------------
-# 6. Tahminleme Modelleri (Forecasting)
-# ------------------------------------------------------------------------------
-
-# 6.1. ??stel D??zeltme Y??ntemleri (ETS / Holt-Winters)
-hw_model <- hw(ts_data, seasonal = "multiplicative") # Holt-Winters
-fit_ets  <- ets(ts_data)                            # Otomatik ETS
-
-# 6.2. ARIMA Modelleme (Dura??anla??t??rma Dahil)
-# Varyans?? sabitlemek i??in Log d??n??????m?? uygulanm????t??r
-log_series <- log(ts_data)
-auto_arima_model <- auto.arima(log_series, seasonal = TRUE)
-forecast_arima <- forecast(auto_arima_model, h = 12)
-
-# ------------------------------------------------------------------------------
-# 7. Model Performans De??erlendirmesi
-# ------------------------------------------------------------------------------
-# E??itim ve Test Seti Ayr??m?? (Son 12 ay test)
-train <- window(ts_data, end = c(1959, 12))
-test  <- window(ts_data, start = c(1960, 1))
-
-model_train <- auto.arima(train)
-fc_test <- forecast(model_train, h = 12)
-
-# Hata Metrikleri (RMSE, MAE)
-accuracy(fc_test, test)
-
-# Kal??nt?? Analizi
-checkresiduals(model_train)
-
-# ------------------------------------------------------------------------------
-# 8. Nihai Tahmin G??rselle??tirme
-# ------------------------------------------------------------------------------
+# Tahmin
+forecast_arima <- forecast(model, h = 12)
 autoplot(forecast_arima) +
-  labs(title = "ARIMA(log) Modeli ile 12 Ayl??k Yolcu Say??s?? Tahmini", 
-       x = "Y??l", y = "Log(Yolcu Say??s??)") +
+  labs(title = "ARIMA Tahmini", x = "Yıl", y = "Yolcu Sayısı") +
   theme_minimal()
+
+
+#Çevresel Veri Analizi (Nottem)
+#Nottingham Kalesi'ndeki ortalama aylık sıcaklıkların analizi.
+
+
+# Veriyi yükleyelim
+data("nottem")
+
+# Görselleştirme
+plot(nottem, main="Nottem Sıcaklık Zaman Serisi", col="darkred")
+
+# Ayrıştırma
+nottem_decomp <- decompose(nottem, type = "additive")
+plot(nottem_decomp)
+
+
+# Finansal Veri Analizi (Google)
+# Google hisse senedi fiyatları için sabit ve zincirleme esaslı endekslerin hesaplanması (2020-2023).
+
+
+# Veriyi indir
+library(quantmod)
+getSymbols("GOOG", src = "yahoo", from = "2020-01-01", to = "2023-12-31")
+
+# Ön işleme
+close_prices <- as.numeric(Cl(GOOG))
+dates <- index(GOOG)
+
+# Sabit Esaslı Endeks (Baz = İlk Gün)
+sabit_indeks <- close_prices / close_prices[1] * 100
+
+# Zincirleme Esaslı Endeks (Baz = Önceki Gün)
+returns <- diff(close_prices) / close_prices[-length(close_prices)]
+bilesik_indeks <- cumprod(1 + returns) * 100
+
+
+# Endeks Görselleştirme
+
+# Endeksleri Çiz
+plot(dates, sabit_indeks, type = "l", col = "blue", 
+     main = "Sabit ve Zincirleme Esaslı Endeksler",
+     ylab = "Endeks", xlab = "Tarih")
+lines(dates[-1], bilesik_indeks, col = "red")
+legend("topleft", legend = c("Sabit Esaslı", "Zincirleme Esaslı"), 
+       col = c("blue", "red"), lty = 1)
+
+
+
+
+
+
+# Sonuç
+# AirPassengers veri seti güçlü bir yukarı yönlü trend ve çarpımsal mevsimsellik göstermektedir.
+
+# Nottem verisi, belirgin bir uzun vadeli trend olmaksızın net bir yıllık mevsimsellik sergilemektedir.
+
+# Google hisse senedi endeksleri, analiz edilen dönemdeki önemli piyasa dalgalanmalarını vurgulamaktadır.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
