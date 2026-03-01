@@ -35,10 +35,12 @@ Projede kullanılan veri setleri ve uygulanan teknikler şunlardır:
 * **AirPassengers:** ARIMA(2,1,1)(0,1,0)[12] modeli ile yapılan tahminlerde, yolcu sayısının artmaya devam edeceği ancak belirsizlik aralığının (confidence interval) uzun vadede genişlediği gözlemlenmiştir.
 * **Nottem:** Sıcaklık verisinde belirgin bir yıllık mevsimsellik (sezonsallık) gözlemlenmiş olup, uzun vadeli bir trend belirlenememiştir.
   
+----
 
 🖼️ Analiz Görselleri ve Teknik Atıflar
 
 1. Google Hisse Senedi Endeks Karşılaştırması
+
 outputs/google_index_analysis.png
 
 Analiz: Sabit ve Bileşik Esaslı Endeks hesaplamaları.
@@ -46,6 +48,7 @@ Analiz: Sabit ve Bileşik Esaslı Endeks hesaplamaları.
 Yorum: Google hisse senedinin baz dönemine oranla sergilediği büyüme performansı ve günlük volatilite yapısı bu grafik üzerinden analiz edilmiştir.
 
 2. Avrupa Borsa Endeksleri (DAX ve FTSE)
+
 outputs/eustock_dax_ftse_comparison.png
 
 Analiz: Karşılaştırmalı Zaman Serisi Analizi.
@@ -53,6 +56,7 @@ Analiz: Karşılaştırmalı Zaman Serisi Analizi.
 Yorum: Alman (DAX) ve İngiliz (FTSE) borsalarının zaman içindeki korelasyonu ve birbirlerine göre relatif getiri performansları karşılaştırılmıştır.
 
 3. AirPassengers Mevsimsellikten Arındırılmış Seri
+
 outputs/airpassengers_seasonally_adjusted.png
 
 Analiz: Mevsimsel Arındırma (Seasonal Adjustment).
@@ -60,6 +64,7 @@ Analiz: Mevsimsel Arındırma (Seasonal Adjustment).
 Yorum: Hava yolu yolcu sayısındaki mevsimsel gürültü temizlenerek, serinin altındaki ana yükseliş trendi daha belirgin hale getirilmiştir.
 
 4. Nottem Toplamsal Ayrıştırma (Decomposition)
+
 outputs/nottem_decomposition.png
 
 Analiz: Additive Decomposition (Trend, Seasonal, Random).
