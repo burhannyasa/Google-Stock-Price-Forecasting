@@ -1,4 +1,4 @@
-# 📊 Zaman Serisi Analizi ve Tahminleme Projesi
+# 📊 Statistical Analysis of Financial and Operational Time Series
 
 Bu repo, finansal, çevresel ve operasyonel veriler üzerinde ekonometrik zaman serisi analizleri ve tahminleme yöntemlerini kapsamlı bir şekilde incelemektedir. Çalışmada **Google Hisse Fiyatları**, **Avrupa Borsa Endeksleri (EuStockMarkets)**, **Hava Yolu Yolcu Sayısı (AirPassengers)** ve **Sıcaklık Verileri (Nottem)** analiz edilmiştir.
 
