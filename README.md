@@ -36,35 +36,35 @@ Projede kullanılan veri setleri ve uygulanan teknikler şunlardır:
 * **Nottem:** Sıcaklık verisinde belirgin bir yıllık mevsimsellik (sezonsallık) gözlemlenmiş olup, uzun vadeli bir trend belirlenememiştir.
   
 
-## 🖼️ Analiz Görselleri ve Yorumları
+🖼️ Analiz Görselleri ve Teknik Atıflar
 
-Proje kapsamında gerçekleştirilen analizlerin detayları aşağıda sunulmuştur. Bu görseller, verilerin teknik özelliklerini ve modellerin performansını yansıtmaktadır.
+1. Google Hisse Senedi Endeks Karşılaştırması
+outputs/google_index_analysis.png
 
-### 1. Google Hisse Senedi Endeks Karşılaştırması
-`outputs/google_index_analysis.png`
-* **Açıklama:** Google kapanış fiyatlarının Sabit Esaslı ve Zincirleme (Bileşik) Esaslı Endeks yöntemleriyle karşılaştırılması.
-* **Yorum:** Hisse senedinin baz tarihine göre %100'ün üzerinde değer kazandığı, ancak zincirleme endeks ile günlük volatilite düzeyinin yüksek olduğu gözlemlenmiştir.
+Analiz: Sabit ve Bileşik Esaslı Endeks hesaplamaları.
 
-### 2. Avrupa Borsa Endeksleri Normalizasyon Analizi
-`outputs/eustock_comparative.png`
-* **Açıklama:** DAX, SMI, CAC ve FTSE endekslerinin 100 baz seviyesine çekilerek (normalizasyon) karşılaştırılması.
-* **Yorum:** Endekslerin birbirleriyle yüksek korelasyon içinde hareket ettiği, ancak düşüş ve yükseliş zamanlarında farklılaşabildikleri tespit edilmiştir.
+Yorum: Google hisse senedinin baz dönemine oranla sergilediği büyüme performansı ve günlük volatilite yapısı bu grafik üzerinden analiz edilmiştir.
 
-### 3. AirPassengers Çarpımsal Ayrıştırma (Decomposition)
-`outputs/airpassengers_decomposition.png`
-* **Açıklama:** Hava yolu yolcu sayısı verisinin Trend, Mevsimsellik ve Hata bileşenlerine ayrıştırılması.
-* **Yorum:** Veride belirgin bir yukarı yönlü trend ve her yıl tekrarlanan çarpımsal mevsimsel döngüler (yaz aylarında artış) net bir şekilde görülmektedir.
+2. Avrupa Borsa Endeksleri (DAX ve FTSE)
+outputs/eustock_dax_ftse_comparison.png
 
-### 4. Nottem Verisi STL Ayrıştırma Grafiği
-`outputs/nottem_stl_analysis.png`
-* **Açıklama:** Sıcaklık verilerinin LOESS (STL) yöntemi ile bileşenlerine ayrılması.
-* **Yorum:** Sıcaklık verisinde belirgin bir yıllık mevsimsellik gözlemlenmiş olup, uzun vadeli belirgin bir trend belirlenememiştir.
+Analiz: Karşılaştırmalı Zaman Serisi Analizi.
 
-### 5. AirPassengers ARIMA Tahmin Modeli
-`outputs/airpassengers_forecast.png`
-* **Açıklama:** ARIMA(2,1,1)(0,1,0)[12] modeli ile gelecek 24 ay için yapılan tahminler ve %95 güven aralığı.
-* **Yorum:** Yolcu sayısının artmaya devam edeceği öngörülmekle birlikte, belirsizlik aralığının (mavi gölge) uzun vadede genişlediği gözlemlenmiştir.
+Yorum: Alman (DAX) ve İngiliz (FTSE) borsalarının zaman içindeki korelasyonu ve birbirlerine göre relatif getiri performansları karşılaştırılmıştır.
 
+3. AirPassengers Mevsimsellikten Arındırılmış Seri
+outputs/airpassengers_seasonally_adjusted.png
+
+Analiz: Mevsimsel Arındırma (Seasonal Adjustment).
+
+Yorum: Hava yolu yolcu sayısındaki mevsimsel gürültü temizlenerek, serinin altındaki ana yükseliş trendi daha belirgin hale getirilmiştir.
+
+4. Nottem Toplamsal Ayrıştırma (Decomposition)
+outputs/nottem_decomposition_analysis.png
+
+Analiz: Additive Decomposition (Trend, Seasonal, Random).
+
+Yorum: Sıcaklık verilerinin mevsimsel döngüleri ile hata payları birbirinden ayrıştırılmış; verinin durağanlığı ve periyodik yapısı incelenmiştir.
 
 ---
 
